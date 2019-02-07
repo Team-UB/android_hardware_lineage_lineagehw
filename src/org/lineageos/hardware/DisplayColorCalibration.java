@@ -17,18 +17,27 @@
 
 package org.lineageos.hardware;
 
+import org.lineageos.internal.util.FileUtils;
+
 public class DisplayColorCalibration {
 
+    private static final String TAG = "DisplayColorCalibration";
+
+    private static final String COLOR_FILE = "/sys/class/graphics/fb0/rgb";
+
+    private static final int MIN = 255;
+    private static final int MAX = 32768;
+
     public static boolean isSupported() {
-        return false;
+        return FileUtils.isFileReadable(COLOR_FILE) && FileUtils.isFileWritable(COLOR_FILE);
     }
 
     public static int getMaxValue()  {
-        return -1;
+        return MAX;
     }
 
     public static int getMinValue()  {
-        return -1;
+        return MIN;
     }
 
     public static int getDefValue() {
@@ -36,11 +45,11 @@ public class DisplayColorCalibration {
     }
 
     public static String getCurColors()  {
-        return null;
+        return FileUtils.readOneLine(COLOR_FILE);
     }
 
     public static boolean setColors(String colors) {
-        return false;
+        return FileUtils.writeLine(COLOR_FILE, colors);
     }
 
 }

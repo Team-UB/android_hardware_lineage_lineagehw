@@ -16,10 +16,16 @@
 
 package org.lineageos.hardware;
 
+import org.lineageos.internal.util.FileUtils;
+
 /**
  * Reader mode
  */
 public class ReadingEnhancement {
+
+    private static final String TAG = "ReadingEnhancement";
+
+    private static final String FILE_READING = "/sys/class/graphics/fb0/reading_mode";
 
     /**
      * Whether device supports Reader Mode
@@ -27,7 +33,7 @@ public class ReadingEnhancement {
      * @return boolean Supported devices must return always true
      */
     public static boolean isSupported() {
-        return false;
+        return FileUtils.isFileReadable(FILE_READING) && FileUtils.isFileWritable(FILE_READING);
     }
 
     /**
@@ -37,7 +43,7 @@ public class ReadingEnhancement {
      * or the operation failed while reading the status; true in any other case.
      */
     public static boolean isEnabled() {
-        return false;
+        return Integer.parseInt(FileUtils.readOneLine(FILE_READING)) > 0;
     }
 
     /**
@@ -48,7 +54,7 @@ public class ReadingEnhancement {
      * failed; true in any other case.
      */
     public static boolean setEnabled(boolean status) {
-        return false;
+        return FileUtils.writeLine(FILE_READING, status ? "1" : "0");
     }
 
 }
